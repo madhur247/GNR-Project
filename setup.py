@@ -9,7 +9,7 @@ processor = AutoProcessor.from_pretrained(
     MODEL_PATH, use_fast=True, local_files_only=LOCAL_ONLY,
 )
 
-dtype = torch.float16
+dtype = torch.bfloat16
 model = AutoModelForImageTextToText.from_pretrained(
     MODEL_PATH,
     torch_dtype=dtype
