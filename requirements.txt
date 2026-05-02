@@ -4,4 +4,4 @@ qwen-vl-utils
 opencv-python-headless 
 pillow
 bitsandbytes
-argsparse
+argparse
