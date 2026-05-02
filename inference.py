@@ -10,6 +10,16 @@ import pandas as pd
 from transformers import Qwen2VLForConditionalGeneration, AutoProcessor, BitsAndBytesConfig
 from qwen_vl_utils import process_vision_info
 
+parser = argparse.ArgumentParser(description="evaluation script")
+parser.add_argument("--test_dir", type=str, required=True, help="Path to test directory")
+args = parser.parse_args()
+
+LOCAL_MODEL_PATH = "./qwen2_vl_offline_weights" 
+PATCH_DIR = os.path.join(args.test_dir,"patches")                   
+TEST_CSV_PATH = os.path.join(args.test_dir,"test.csv")                      
+OUTPUT_CSV_PATH = "./submission.csv"
+CONFIDENCE_THRESHOLD = 0.50     
+
 def rotate_patch(img, times):
     times = times % 4
     if times == 0:
@@ -155,18 +165,10 @@ def stitch(patch_dir, strip=0.35):
     return Image.fromarray(cv2.cvtColor(canvas, cv2.COLOR_BGR2RGB))
 
 
-parser = argparse.ArgumentParser(description="evaluation script")
-parser.add_argument("--test_dir", type=str, required=True, help="Path to test directory")
-args = parser.parse_args()
-result = stitch('./patches/', strip=0.35)
+result = stitch(PATCH_DIR, strip=0.35)
 result.save('stitched_sift_final.png')
 
 
-LOCAL_MODEL_PATH = "./qwen2_vl_offline_weights" 
-PATCH_DIR = os.path.join(test_dir,"patches")                   
-TEST_CSV_PATH = os.path.join(test_dir,"test.csv")                      
-OUTPUT_CSV_PATH = os.path.join(test_dir,"submission.csv")
-CONFIDENCE_THRESHOLD = 0.50                    
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
