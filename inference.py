@@ -7,7 +7,7 @@ from tqdm import tqdm
 import gc
 import torch
 import pandas as pd
-from transformers import Qwen2VLForConditionalGeneration, AutoProcessor
+from transformers import Qwen2VLForConditionalGeneration, AutoProcessor, BitsAndBytesConfig
 from qwen_vl_utils import process_vision_info
 
 parser = argparse.ArgumentParser(description="evaluation script")
@@ -174,17 +174,17 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 
 print("Loading Qwen2-VL")
 
-# quant_config = BitsAndBytesConfig(
-#     load_in_4bit=True,
-#     bnb_4bit_compute_dtype=torch.bfloat16,
-#     bnb_4bit_use_double_quant=True
-# )
+quant_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_compute_dtype=torch.bfloat16,
+    bnb_4bit_use_double_quant=True
+)
 
 processor = AutoProcessor.from_pretrained(LOCAL_MODEL_PATH)
 
 model = Qwen2VLForConditionalGeneration.from_pretrained(
     LOCAL_MODEL_PATH, 
-    # quantization_config=quant_config,
+    quantization_config=quant_config,
     device_map="auto"
 )
 model.eval()
