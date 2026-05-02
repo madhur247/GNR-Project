@@ -3,5 +3,5 @@ accelerate
 qwen-vl-utils 
 opencv-python-headless 
 pillow
-bitsandbytes
+# bitsandbytes
 argparse
